@@ -31,6 +31,8 @@ app.post("/api/users", usersHandlers.postNewUser);
 
 app.put("/api/movies/:id", movieHandlers.updateMovie);
 
+app.put("/api/users/:id", usersHandlers.updateUsers);
+
 app.listen(port, (err) => {
   if (err) {
     console.error("Something bad happened");

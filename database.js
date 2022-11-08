@@ -22,9 +22,9 @@ database
 
 
   database
-  .query("select * from movies")
-  .then(([movies]) => {
-    console.log(movies);
+  .query("select * from users")
+  .then(([users]) => {
+    console.log(users);
   })
   .catch((err) => {
     console.error(err);
