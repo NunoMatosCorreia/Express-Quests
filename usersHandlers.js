@@ -1,8 +1,33 @@
 const database = require("./database");
 
 const getUsers = (req, res) => {
+  const initialSql = "select * from users";
+  const where = [];
+
+  if (req.query.language != null) {
+    where.push({
+      column: "language",
+      value: req.query.language,
+      operator: "=",
+    });
+  }
+  if (req.query.city != null) {
+    where.push({
+      column: "city",
+      value: req.query.city,
+      operator: "=",
+    });
+  }
+
   database
-    .query("select * from users")
+    .query(
+      where.reduce(
+        (sql, { column, operator }, index) =>
+          `${sql} ${index === 0 ? "where" : "and"} ${column} ${operator} ?`,
+        initialSql
+      ),
+      where.map(({ value }) => value)
+    )
     .then(([users]) => {
       res.json(users);
     })
@@ -76,7 +101,7 @@ const deleteUsers = (req, res) => {
   const id = parseInt(req.params.id);
 
   database
-    .query("delete from users where id = ?", [id])
+    .query("delete from  where id = ?", [id])
     .then(([result]) => {
       if (result.affectedRows === 0) {
         res.status(404).send("Not Found");
@@ -89,6 +114,8 @@ const deleteUsers = (req, res) => {
       res.status(500).send("Error deleting the users");
     });
 };
+
+
 
 module.exports = {
   getUsers,
